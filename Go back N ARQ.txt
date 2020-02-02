@@ -1,0 +1,180 @@
+#include<stdio.h>
+#include<GL/glut.h>
+
+void send();
+void ack();
+int i,n,m;
+
+void drawrect()
+{
+    int x1=100,x2=200,x3=300,x4=400,y1=200,y2=300,y3=400,y4=500;
+
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glColor3f(1.0,0.0,0.0);
+
+    for(i=0;i<(3*100);i+=100)
+    {
+         glBegin(GL_POLYGON);
+
+         glVertex2d(x1,y1+i);
+
+         glVertex2d(x2,y2+i);
+
+         glVertex2d(x2,y3+i);
+
+         glVertex2d(x1,y4+i);
+
+      glEnd();
+    }
+
+    for(i=0;i<(3*100);i+=100)
+    {
+         glBegin(GL_POLYGON);
+
+         glVertex2d(x3,y1+i);
+
+         glVertex2d(x4,y2+i);
+
+         glVertex2d(x4,y3+i);
+
+         glVertex2d(x3,y4+i);
+
+      glEnd();
+    }
+
+ glFlush();
+ glutSwapBuffers();
+
+}
+
+static void (*draw)(void) = send;
+
+void init()
+{
+
+    glClearColor(1.0,1.0,1.0,1.0);
+
+    glMatrixMode(GL_PROJECTION);
+
+    glLoadIdentity();
+
+    gluOrtho2D(0.0,599.0,0.0,599.0);
+
+}
+
+void display()
+{
+
+    glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+    glColor3f(1.0,0.0,0.0);
+
+    glBegin(GL_LINES);
+
+      glVertex2d(150,100);
+
+      glVertex2d(150,400);
+
+    glEnd();
+
+    glBegin(GL_LINES);
+
+      glVertex2d(400,100);
+
+      glVertex2d(400,400);
+
+    glEnd();
+
+    glRasterPos(75,450);
+    glutBitmapCharacter(GLUT_BITMAP_8_BY_13,'S');
+    send();
+    ack();
+
+    if(m=n)
+
+        printf("data delivered succesfully\n");
+
+    glFlush();
+
+ glutSwapBuffers();
+
+}
+
+void send()
+{
+    int x1=150,y1=375,x2=400,y2=325;
+
+    glColor3f(0.0,0.0,0.0);
+
+    for(i=0;i<(n*20);i+=20)
+    {
+
+        glBegin(GL_LINES);
+
+         glVertex2i(x1,y1-i);
+
+         glVertex2i(x2,y2-i);
+
+        glEnd();
+
+    }
+
+printf("DATA SENT\n");
+
+}
+
+void ack()
+{
+
+    int x3=150,y3=275,x4=400,y4=325;
+
+    glColor3f(0.0,1.0,0.0);
+
+    for(i=0;i<(m * 20);i+=20)
+    {
+
+        glBegin(GL_LINES);
+
+         glVertex2i(x3,y3-i);
+
+         glVertex2i(x4,y4-i);
+
+        glEnd();
+
+    }
+
+printf("ACKNOWLEDGEMENT RECIEVED\n");
+
+}
+
+void main(int argc,char **argv)
+{
+
+    printf("enter the no of data to be sent\n");
+    scanf_s("%d",&n);
+
+    printf("enter the no of acknowledgements to be recieved\n");
+    scanf_s("%d",&m);
+
+     glutInit(&argc,argv);
+
+     glutInitDisplayMode(GLUT_DOUBLE|GLUT_RGB);
+
+     glutCreateWindow("GO BACK N ARQ");
+
+     glutInitWindowSize(600,600);
+
+     glutDisplayFunc(display);
+
+     glutCreateWindow("ARQ DIAGRAM");
+
+     glutInitWindowSize(500,500);
+
+     glutDisplayFunc(drawrect);
+
+     init();
+
+     glutMainLoop();
+
+}
+
+
